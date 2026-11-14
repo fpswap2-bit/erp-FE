@@ -16,6 +16,9 @@ import FeePlan from "@/pages/admin/FeePlan";
 import FeeStructure from "@/pages/admin/FeeStructure";
 import FeePaymentRecords from "@/pages/admin/FeePaymentRecords";
 import FeePaymentReview from "@/pages/admin/FeePaymentReview";
+import StudentFeeStructure from "@/pages/student/FeeStucture";
+import Receipts from "@/pages/student/Receipts";
+import ReceiptDetail from "@/pages/student/ReceiptDetail";
 
 function HomeRedirect() {
     const { isAuthenticated, isLoading, roles } = useAuthStore();
@@ -56,9 +59,10 @@ export default function AppRouter() {
             <Route path="/student" element={<StudentLayout />}>
             <Route index element={<StudentHome />} />
             <Route path="enrollment" element={<EnrollmentForm />} />
-            <Route path="fee-structure" element={<ServicePlaceholder title="Fee Structure" />}/>
+            <Route path="fee-structure" element={<StudentFeeStructure />} />
             <Route  path="pay-fees" element={<ServicePlaceholder title="Pay Fees" />}/>
-            <Route  path="receipts" element={<ServicePlaceholder title="Fee Receipts" />}/>
+            <Route path="receipts" element={<Receipts />} />
+            <Route path="receipts/:name" element={<ReceiptDetail />} />
             <Route  path="profile"  element={<ServicePlaceholder title="Student Profile" />}/>
             </Route>
             </Route>

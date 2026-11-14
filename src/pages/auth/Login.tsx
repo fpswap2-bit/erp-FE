@@ -54,7 +54,7 @@ export default function Login() {
                     <span className="rounded-xl bg-white/90 px-4 py-2">
                         <img src={logo} alt="Surabhi Group of Institutions" className="h-16 w-auto" />
                     </span>
-                    <p className="text-2xl text-white/70">Sign in to continue</p>
+                    <p className="text-lg text-white/70">Sign in to continue</p>
                 </div>
 
                 <div className="space-y-6 ">
