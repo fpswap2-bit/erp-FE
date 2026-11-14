@@ -61,7 +61,7 @@ export default function StudentHome() {
         <p className="mt-4 text-base text-gray-600">Choose a service below to continue.</p>
     </div>
 
-    <div className="rounded-[40px] border-2 border-t-[6px] border-neutral-600 p-6 sm:p-10">
+    <div className="rounded-[40px] border-2 border-t-[6px] border-l-4 border-neutral-600 p-6 sm:p-10">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
                 <ServiceCard key={service.title} {...service} />
