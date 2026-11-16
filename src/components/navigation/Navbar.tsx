@@ -50,12 +50,12 @@ export default function Navbar() {
 
     return (
         <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white/70 backdrop-blur">
-            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between  px-4">
+            <div className="mx-auto flex h-10 max-w-6xl items-center justify-between  px-4">
                 <Link
                     to={isAuthenticated ? getPortalPath(roles) : "/login"}
                     className="flex shrink-0 items-center"
                 >
-                    <img src= {logo} alt="Surabhi Group of Institutions" className="h-10" />
+                    <img src= {logo} alt="Surabhi Group of Institutions" className="h-6" />
                 </Link>
 
                 {/* Desktop links */}

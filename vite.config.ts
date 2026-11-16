@@ -6,17 +6,17 @@ import path from "node:path";
 // Define proxy settings so they can be reused
 const backendProxy = {
     "/api": {
-        target: "http://127.0.0.1:8000",
+        target: "http://172.16.17.32:8000",
         changeOrigin: true,
         headers: { Host: "surabhierp.local" },
     },
     "/private": {
-        target: "http://127.0.0.1:8000",
+        target: "http://172.16.17.32:8000",
         changeOrigin: true,
         headers: { Host: "surabhierp.local" },
     },
     "/files": {
-        target: "http://127.0.0.1:8000",
+        target: "http://172.16.17.32:8000",
         changeOrigin: true,
         headers: { Host: "surabhierp.local" },
     },
