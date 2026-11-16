@@ -44,11 +44,11 @@ export default function Login() {
     };
 
     return (
-        <main className="relative flex flex-1 items-center justify-center p-8 py-16">
+        <main className="relative flex flex-1 items-center justify-center lg:p-8 py-16">
 
             <form
                 onSubmit={handleSubmit}
-                className="relative w-lg h-5/6 space-y-12 rounded-3xl border border-t-4 border-black/15 bg-black/95 p-4 shadow-xl backdrop-blur-2xl sm:p-10 bg-[radial-gradient(ellipse_at_top,#992000_2%,#944029_20%,#dbd4bd_100%)]"
+                className="relative w-lg lg:h-5/6 space-y-12 rounded-3xl border border-t-4 border-black/15 bg-black/95 p-4 shadow-xl backdrop-blur-2xl sm:p-10 bg-[radial-gradient(ellipse_at_top,#992000_2%,#944029_20%,#dbd4bd_100%)]"
             >
                 <div className="flex flex-col items-center gap-9 text-center">
                     <span className="rounded-xl bg-white/90 px-4 py-2">

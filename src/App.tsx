@@ -20,7 +20,7 @@ function App() {
         {/*<SmokeyBackground color="#0a3253" backdropBlurAmount="sm" className="z-0" />*/}
         <div className="relative z-10 flex min-h-screen flex-col">
             <Navbar />
-            <main className="mx-auto w-full max-w-9/12 flex-1 px-4 py-6">
+            <main className="mx-auto w-full lg:max-w-9/12 flex-1 px-4 py-6">
             <AppRouter />
             </main>
             <Footer />
