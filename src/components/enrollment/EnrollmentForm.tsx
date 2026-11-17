@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { exportElementToA4Pdf } from "@/lib/snapshot";
 import { useEnrollmentStore, type FormField } from "@/store/enrollmentStore";
-import logo from "@/assets/rgpv.webp?inline";
+import logo from "@/assets/logo.svg?inline";
 
 const LAYOUT_TYPES = new Set(["Section Break", "Column Break", "Tab Break"]);
 const HIDDEN_EXTRA = new Set(["amended_from"]);
@@ -270,7 +270,7 @@ export default function EnrollmentForm({ mode = "student", name }: Props) {
                 >
                     {/* Header */}
                     <header className="grid items-center gap-3 border-b-[3px] border-double border-neutral-700 pb-3 text-center md:grid-cols-[90px_1fr_90px]">
-                        <div className="mx-auto h-[90px] w-[90px]">
+                        <div className="mx-auto h-[100px] w-[150px]">
                             <img
                                 src={logo}
                                 alt="University emblem"
@@ -279,9 +279,9 @@ export default function EnrollmentForm({ mode = "student", name }: Props) {
                         </div>
                         <div className="font-serif">
                             <h1 className="text-base font-extrabold sm:text-xl">
-                                RAJIV GANDHI PROUDYOGIKI VISHWAVIDYALAYA
+                                SURABHI GROUP OF INSTITUTIONS
                             </h1>
-                            <h2 className="my-0.5 text-sm sm:text-[17px]">BHOPAL – 462033</h2>
+                            <h2 className="my-0.5 text-sm sm:text-[17px]">BHOPAL – 462010</h2>
                             <h3 className="mt-2 text-xs sm:text-sm">
                                 STUDENT DATA FORM (SDF) &amp; ENCLOSURE VERIFICATION LIST (EVL)
                             </h3>

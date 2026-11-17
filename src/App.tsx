@@ -16,7 +16,7 @@ function App() {
     return(
         <TooltipProvider>
         <BrowserRouter>
-        <div className="relative flex min-h-screen flex-col bg-amber-100">
+        <div className="relative flex min-h-screen flex-col bg-amber-100/10">
         {/*<SmokeyBackground color="#0a3253" backdropBlurAmount="sm" className="z-0" />*/}
         <div className="relative z-10 flex min-h-screen flex-col">
             <Navbar />

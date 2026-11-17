@@ -49,7 +49,7 @@ const services = [
 export default function AdminWorkspace() {
     return (
     <section>
-    <div className="mb-6 max-w-3xl">
+    <div className="mb-6 max-w-4xl">
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#1a237e]">
             Administration
         </p>

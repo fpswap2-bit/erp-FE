@@ -179,12 +179,6 @@ export default function ReceiptDetail() {
                         className="absolute left-0 top-0 h-24 w-40 object-contain"
                     />
 
-                    <img
-                        src="/rgpv.webp"
-                        alt="RGPV"
-                        className="absolute right-0 top-0 h-16 w-16 object-contain"
-                    />
-
                     <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#8e1b1b]">
                         Surabhi Group of Institutions
                     </p>

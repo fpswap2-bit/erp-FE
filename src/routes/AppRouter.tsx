@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import ServicePlaceholder from "../pages/common/ServicePlaceholder";
+// import ServicePlaceholder from "../pages/common/ServicePlaceholder";
 import ProtectedRoute from "./ProtectedRoute";
 import { ADMIN_ROLES, getPortalPath } from "./portal";
 import { useAuthStore } from "../store/authStore";
@@ -20,6 +20,7 @@ import StudentFeeStructure from "@/pages/student/FeeStucture";
 import Receipts from "@/pages/student/Receipts";
 import ReceiptDetail from "@/pages/student/ReceiptDetail";
 import PayFees from "@/pages/student/PayFees";
+import UserProfile from "@/pages/common/UserProfile";
 
 function HomeRedirect() {
     const { isAuthenticated, isLoading, roles } = useAuthStore();
@@ -56,6 +57,7 @@ export default function AppRouter() {
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+            
             <Route element={<ProtectedRoute allowedRoles={["Student"]} />}>
             <Route path="/student" element={<StudentLayout />}>
             <Route index element={<StudentHome />} />
@@ -64,7 +66,7 @@ export default function AppRouter() {
             <Route path="pay-fees" element={<PayFees />} />
             <Route path="receipts" element={<Receipts />} />
             <Route path="receipts/:name" element={<ReceiptDetail />} />
-            <Route  path="profile"  element={<ServicePlaceholder title="Student Profile" />}/>
+            <Route path="profile" element={<UserProfile />} />            
             </Route>
             </Route>
 
@@ -78,6 +80,8 @@ export default function AppRouter() {
                 <Route path="fee-payment" element={<FeePaymentRecords />} />
                 <Route path="fee-payment/:name" element={<FeePaymentReview />} />
                 <Route path="bank-account" element={<BankAccount />}/>
+                <Route path="profile" element={<UserProfile />} />            
+
             </Route>
         </Route>
 
