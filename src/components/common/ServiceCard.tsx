@@ -12,7 +12,7 @@ export default function ServiceCard({ title, description, icon: Icon, to }: Serv
     return (
         <Link
             to={to}
-            className="group flex flex-col rounded-xl border border-neutral-300 border-t-4 border-r-4 border-neutral-600 bg-white p-7 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="group flex flex-col rounded-xl border border-neutral-300 border-t-4 border-r-4 border-neutral-600 bg-amber-100/50 p-7 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
         >
             <span className="mb-6 flex h-14 w-14 items-center justify-center rounded-lg border border-[#e8dcd6] bg-[#f6f1ec] text-[#1a237e]">
                 <Icon className="h-6 w-6" strokeWidth={1.75} />

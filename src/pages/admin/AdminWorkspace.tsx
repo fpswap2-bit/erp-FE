@@ -49,7 +49,7 @@ const services = [
 export default function AdminWorkspace() {
     return (
     <section>
-    <div className="mb-10 max-w-2xl">
+    <div className="mb-6 max-w-3xl">
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#1a237e]">
             Administration
         </p>
@@ -63,7 +63,7 @@ export default function AdminWorkspace() {
         </p>
     </div>
 
-    <div className="rounded-[40px] border-2 border-t-[6px] border-l-4 border-neutral-600 p-6 sm:p-10">
+    <div className="rounded-[40px] border-2 bg-white border-t-[6px] border-l-4 border-neutral-600 p-6 sm:p-10">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
                 <ServiceCard key={service.title} {...service} />
