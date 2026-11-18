@@ -14,6 +14,7 @@ import EnrollmentReview from "@/pages/admin/EnrollmentReview";
 import BankAccount from "@/pages/admin/BankAccount";
 import FeePlan from "@/pages/admin/FeePlan";
 import FeeStructure from "@/pages/admin/FeeStructure";
+import CreateFeeStructure from "@/pages/admin/CreateStuctures";
 import FeePaymentRecords from "@/pages/admin/FeePaymentRecords";
 import FeePaymentReview from "@/pages/admin/FeePaymentReview";
 import StudentFeeStructure from "@/pages/student/FeeStucture";
@@ -77,6 +78,7 @@ export default function AppRouter() {
                 <Route path="enrollment-records/:name" element={<EnrollmentReview />} />
                 <Route path="fee-plan" element={<FeePlan />} />
                 <Route path="fee-structure" element={<FeeStructure />}/>
+                <Route path="fee-structure/new" element={<CreateFeeStructure/>}/>
                 <Route path="fee-payment" element={<FeePaymentRecords />} />
                 <Route path="fee-payment/:name" element={<FeePaymentReview />} />
                 <Route path="bank-account" element={<BankAccount />}/>

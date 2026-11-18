@@ -1,8 +1,5 @@
 const ADMIN_ROLES = [
     "Admin",
-    "Admission Officer",
-    "Admission Committee",
-    "Academic Office",
     "System Manager",
 ];
 

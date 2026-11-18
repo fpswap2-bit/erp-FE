@@ -154,7 +154,7 @@ export default function StudentFeeStructure() {
                             </p>
                         ) : (
                             <div className="overflow-x-auto">
-                                <table className="w-full min-w-[420px] text-left text-sm">
+                                <table className="w-full min-w-105 text-left text-sm">
                                     <thead>
                                         <tr className="border-b border-[#e8e2df] text-xs text-neutral-500">
                                             <th className="py-2 pr-4 font-medium">
@@ -220,7 +220,7 @@ export default function StudentFeeStructure() {
                         )}
                     </div>
 
-                    {/* Fee structure the plan is based on */}
+                    {/* Fee structure the plan is based on
                     <div className="rounded-md border border-[#e8e2df] bg-white p-5 sm:p-6">
                         <h2 className="mb-2 font-serif text-xl font-bold">
                             Fee Structure
@@ -274,7 +274,7 @@ export default function StudentFeeStructure() {
                                 The fee structure for this plan is not available.
                             </p>
                         )}
-                    </div>
+                    </div> */}
                 </>
             )}
         </section>

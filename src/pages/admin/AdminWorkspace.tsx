@@ -6,7 +6,7 @@ import {
     Landmark,
 } from "lucide-react";
 
-import ServiceCard from "../../components/common/ServiceCard";
+import ServiceCard from "@/components/common/ServiceCard";
 
 const services = [
     {

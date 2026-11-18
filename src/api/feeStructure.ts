@@ -1,4 +1,3 @@
-
 import api from "./axios";
 
 const METHOD = "/api/method/surabhierp.api.fee_structure.";
@@ -16,24 +15,33 @@ export interface FeeStructureOptions {
     academic_years: string[];
 }
 
-export const getFeeStructureOptions = async () => {
-    const { data } = await api.get(
-        METHOD + "get_fee_structure_options"
-    );
+export interface FeeStructure extends FeeStructureData {
+    name: string;
+    modified: string;
+}
 
-    return data.message as FeeStructureOptions;
-};
+export interface FeeStructureFilters {
+    search?: string;
+    academic_year?: string;
+    branch?: string;
+    study_year?: string;
+    start?: number;
+    page_length?: number;
+}
 
-export const createFeeStructure = async (payload: FeeStructureData) => {
-    const { data } = await api.post(
-        METHOD + "create_fee_structure",
-        { data: payload }
-    );
+export interface FeeStructureResponse {
+    records: FeeStructure[];
+    total: number;
+}
 
-    return data.message as {
-        name: string;
-        branch: string;
-        academic_year: string;
-        study_year: string;
-    };
-};
+export const getFeeStructureOptions = () =>
+    api.get(METHOD + "get_fee_structure_options")
+        .then(({ data }) => data.message as FeeStructureOptions);
+
+export const createFeeStructure = (payload: FeeStructureData) =>
+    api.post(METHOD + "create_fee_structure", { data: payload })
+        .then(({ data }) => data.message as Pick<FeeStructure, "name" | "branch" | "academic_year" | "study_year">);
+
+export const getFeeStructures = (filters: FeeStructureFilters) =>
+    api.get(METHOD + "get_fee_structures", { params: filters })
+        .then(({ data }) => data.message as FeeStructureResponse);

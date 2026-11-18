@@ -1,283 +1,337 @@
 
-import { useEffect, useState } from "react";
-import { ArrowLeft, Save, CheckCircle2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import {
-    createFeeStructure,
+    Search,
+    RefreshCw,
+    ChevronLeft,
+    ChevronRight,Plus} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
     getFeeStructureOptions,
+    getFeeStructures,
+    type FeeStructure,
     type FeeStructureOptions,
-} from "../../api/feeStructure";
+} from "@/api/feeStructure";
 
-const initialForm = {
-    branch: "",
-    academic_year: "",
-    study_year: "1",
-    odd_semester_fee: "",
-    even_semester_fee: "",
-};
+const PAGE_SIZE = 20;
 
-const currency = (value: string) =>
+const currency = (value: number) =>
     new Intl.NumberFormat("en-IN", {
         style: "currency",
         currency: "INR",
         maximumFractionDigits: 0,
-    }).format(Number(value) || 0);
+    }).format(value || 0);
 
-export default function FeeStructure() {
+export default function FeeStructures() {
+    const [records, setRecords] = useState<FeeStructure[]>([]);
+    const [total, setTotal] = useState(0);
+
     const [options, setOptions] = useState<FeeStructureOptions>({
         branches: [],
         academic_years: [],
     });
 
-    const [form, setForm] = useState(initialForm);
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
+    const [search, setSearch] = useState("");
+    const [academicYear, setAcademicYear] = useState("");
+    const [branch, setBranch] = useState("");
+    const [studyYear, setStudyYear] = useState("");
+    const [page, setPage] = useState(0);
+
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+
+    const loadStructures = useCallback(async () => {
+        setLoading(true);
+        setError("");
+
+        try {
+            const result = await getFeeStructures({
+                search: search.trim() || undefined,
+                academic_year: academicYear || undefined,
+                branch: branch || undefined,
+                study_year: studyYear || undefined,
+                start: page * PAGE_SIZE,
+                page_length: PAGE_SIZE,
+            });
+
+            setRecords(result.records);
+            setTotal(result.total);
+        } catch (err: any) {
+            setError(
+                err.response?.data?.message ||
+                "Unable to load fee structures."
+            );
+        } finally {
+            setLoading(false);
+        }
+    }, [search, academicYear, branch, studyYear, page]);
 
     useEffect(() => {
         getFeeStructureOptions()
             .then(setOptions)
-            .catch(err => {
-                setError(
-                    err.response?.data?.message ||
-                    "Unable to load Branch and Academic Year options."
-                );
-            })
-            .finally(() => setLoading(false));
+            .catch(() => {
+                setError("Unable to load filter options.");
+            });
     }, []);
 
-    const updateField = (field: keyof typeof initialForm, value: string) => {
-        setForm(current => ({ ...current, [field]: value }));
-        setError("");
-        setSuccess("");
+    useEffect(() => {
+        loadStructures();
+    }, [loadStructures]);
+
+    const resetFilters = () => {
+        setSearch("");
+        setAcademicYear("");
+        setBranch("");
+        setStudyYear("");
+        setPage(0);
     };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setSuccess("");
-
-        if (
-            !form.branch ||
-            !form.academic_year ||
-            !form.study_year ||
-            form.odd_semester_fee === "" ||
-            form.even_semester_fee === ""
-        ) {
-            setError("Please complete all fields.");
-            return;
-        }
-
-        if (
-            Number(form.odd_semester_fee) < 0 ||
-            Number(form.even_semester_fee) < 0
-        ) {
-            setError("Fee amounts cannot be negative.");
-            return;
-        }
-
-        setSaving(true);
-
-        try {
-            const result = await createFeeStructure({
-                ...form,
-                odd_semester_fee: Number(form.odd_semester_fee),
-                even_semester_fee: Number(form.even_semester_fee),
-            });
-
-            setSuccess(`Fee Structure created successfully: ${result.name}`);
-            setForm(initialForm);
-        } catch (err: any) {
-            setError(
-                err.response?.data?.message ||
-                "Unable to create Fee Structure."
-            );
-        } finally {
-            setSaving(false);
-        }
-    };
-
+    const navigate = useNavigate();
     return (
-        <div className="mx-auto max-w-4xl space-y-6 text-neutral-800">
-            <div>
-                <button
-                    type="button"
-                    onClick={() => window.history.back()}
-                    className="mb-3 flex items-center gap-2 text-sm text-neutral-500 hover:text-[#8e1b1b]"
-                >
-                    <ArrowLeft size={16} />
-                    Back
-                </button>
+        <div className="space-y-6 text-neutral-800">
 
-                <h1 className="text-2xl font-semibold">Create Fee Structure</h1>
-                <p className="mt-1 text-sm text-neutral-500">
-                    Configure the default semester fees for a branch and academic year.
-                </p>
-            </div>
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4">
+                 <div>
+                     <h1 className="text-2xl font-semibold">
+                         Fee Structures
+                     </h1>
+                     <p className="mt-1 text-sm text-neutral-500">
+                         View and review semester fee structures
+                         configured for each branch and academic year.
+                     </p>
+                 </div>
 
+                 <Button
+                     variant="default"
+                     onClick={() => navigate("/admin/fee-structure/new")}
+                 >
+                     <Plus size={16} className="mr-2" />
+                     Create Fee Structure
+                 </Button>
+             </div>
+
+            {/* Error */}
             {error && (
                 <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                     {error}
                 </div>
             )}
 
-            {success && (
-                <div className="flex items-start gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-                    <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
-                    {success}
-                </div>
-            )}
+            {/* Filters */}
+            <div className="rounded-xl border border-neutral-200 bg-white p-4">
+                <div className="grid gap-3 md:grid-cols-4">
 
-            <form
-                onSubmit={handleSubmit}
-                className="overflow-hidden rounded-xl border border-neutral-200 bg-white"
-            >
-                <div className="border-b border-neutral-100 px-6 py-5">
-                    <h2 className="font-semibold">Structure Details</h2>
-                    <p className="mt-1 text-xs text-neutral-500">
-                        Select the academic context for this fee structure.
-                    </p>
-                </div>
+                    <div className="relative md:col-span-2">
+                        <Search className="absolute left-3 top-3 h-4 w-4 text-neutral-400" />
 
-                <div className="grid gap-5 p-6 sm:grid-cols-2">
-                    <div>
-                        <label className="mb-2 block text-sm font-medium">
-                            Branch <span className="text-red-600">*</span>
-                        </label>
-                        <select
-                            required
-                            disabled={loading}
-                            value={form.branch}
-                            onChange={e => updateField("branch", e.target.value)}
-                            className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#8e1b1b]"
-                        >
-                            <option value="">Select Branch</option>
-                            {options.branches.map(branch => (
-                                <option key={branch} value={branch}>
-                                    {branch}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="mb-2 block text-sm font-medium">
-                            Academic Year <span className="text-red-600">*</span>
-                        </label>
-                        <select
-                            required
-                            disabled={loading}
-                            value={form.academic_year}
-                            onChange={e => updateField("academic_year", e.target.value)}
-                            className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#8e1b1b]"
-                        >
-                            <option value="">Select Academic Year</option>
-                            {options.academic_years.map(year => (
-                                <option key={year} value={year}>
-                                    {year}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="mb-2 block text-sm font-medium">
-                            Study Year <span className="text-red-600">*</span>
-                        </label>
-                        <select
-                            required
-                            value={form.study_year}
-                            onChange={e => updateField("study_year", e.target.value)}
-                            className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#8e1b1b]"
-                        >
-                            {[1, 2, 3, 4].map(year => (
-                                <option key={year} value={String(year)}>
-                                    Year {year}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-                <div className="border-y border-neutral-100 px-6 py-5">
-                    <h2 className="font-semibold">Semester Fees</h2>
-                    <p className="mt-1 text-xs text-neutral-500">
-                        Set the default amount for each semester.
-                    </p>
-                </div>
-
-                <div className="grid gap-5 p-6 sm:grid-cols-2">
-                    <div className="rounded-xl border border-neutral-200 p-4">
-                        <p className="font-medium">Odd Semester</p>
-                        <p className="mb-4 mt-1 text-xs text-neutral-500">
-                            July – December
-                        </p>
-
-                        <label className="mb-2 block text-sm font-medium">
-                            Fee Amount (₹) <span className="text-red-600">*</span>
-                        </label>
                         <input
-                            required
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={form.odd_semester_fee}
-                            onChange={e => updateField("odd_semester_fee", e.target.value)}
-                            placeholder="50000"
-                            className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 outline-none focus:border-[#8e1b1b]"
+                            value={search}
+                            onChange={e => {
+                                setSearch(e.target.value);
+                                setPage(0);
+                            }}
+                            placeholder="Search fee structure..."
+                            className="w-full rounded-lg border border-neutral-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-[#8e1b1b]"
                         />
-                        <p className="mt-2 text-xs text-neutral-500">
-                            Preview: {currency(form.odd_semester_fee)}
-                        </p>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-200 p-4">
-                        <p className="font-medium">Even Semester</p>
-                        <p className="mb-4 mt-1 text-xs text-neutral-500">
-                            January – June
-                        </p>
+                    <select
+                        value={academicYear}
+                        onChange={e => {
+                            setAcademicYear(e.target.value);
+                            setPage(0);
+                        }}
+                        className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm outline-none focus:border-[#8e1b1b]"
+                    >
+                        <option value="">All Academic Years</option>
 
-                        <label className="mb-2 block text-sm font-medium">
-                            Fee Amount (₹) <span className="text-red-600">*</span>
-                        </label>
-                        <input
-                            required
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={form.even_semester_fee}
-                            onChange={e => updateField("even_semester_fee", e.target.value)}
-                            placeholder="50000"
-                            className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 outline-none focus:border-[#8e1b1b]"
-                        />
-                        <p className="mt-2 text-xs text-neutral-500">
-                            Preview: {currency(form.even_semester_fee)}
-                        </p>
-                    </div>
-                </div>
+                        {options.academic_years.map(year => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        ))}
+                    </select>
 
-                <div className="flex items-center justify-between border-t border-neutral-100 bg-neutral-50 px-6 py-4">
-                    <p className="text-sm text-neutral-500">
-                        Total: <strong className="text-neutral-800">
-                            {currency(
-                                String(
-                                    (Number(form.odd_semester_fee) || 0) +
-                                    (Number(form.even_semester_fee) || 0)
-                                )
-                            )}
-                        </strong>
-                    </p>
+                    <select
+                        value={branch}
+                        onChange={e => {
+                            setBranch(e.target.value);
+                            setPage(0);
+                        }}
+                        className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm outline-none focus:border-[#8e1b1b]"
+                    >
+                        <option value="">All Branches</option>
+
+                        {options.branches.map(item => (
+                            <option key={item} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                    </select>
+
+                    <select
+                        value={studyYear}
+                        onChange={e => {
+                            setStudyYear(e.target.value);
+                            setPage(0);
+                        }}
+                        className="rounded-lg border border-neutral-200 px-3 py-2.5 text-sm outline-none focus:border-[#8e1b1b]"
+                    >
+                        <option value="">All Study Years</option>
+
+                        {[1, 2, 3, 4].map(year => (
+                            <option key={year} value={String(year)}>
+                                Year {year}
+                            </option>
+                        ))}
+                    </select>
 
                     <button
-                        type="submit"
-                        disabled={saving || loading}
-                        className="flex items-center gap-2 rounded-lg bg-[#8e1b1b] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#741616] disabled:cursor-not-allowed disabled:opacity-60"
+                        onClick={resetFilters}
+                        className="flex items-center justify-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-600 hover:bg-neutral-50"
                     >
-                        <Save size={16} />
-                        {saving ? "Creating..." : "Create Fee Structure"}
+                        <RefreshCw size={15} />
+                        Reset filters
                     </button>
+
                 </div>
-            </form>
+            </div>
+
+            {/* Records */}
+            <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+
+                <div className="flex items-center justify-between border-b border-neutral-100 px-5 py-4">
+                    <div>
+                        <h2 className="font-semibold">
+                            Configured Fee Structures
+                        </h2>
+                        <p className="mt-1 text-xs text-neutral-500">
+                            Branch-wise semester fee configuration
+                        </p>
+                    </div>
+
+                    <span className="text-sm text-neutral-500">
+                        {total} records
+                    </span>
+                </div>
+
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+
+                        <thead className="bg-neutral-50 text-xs uppercase text-neutral-500">
+                            <tr>
+                                <th className="px-5 py-3">Branch</th>
+                                <th className="px-5 py-3">Academic Year</th>
+                                <th className="px-5 py-3">Study Year</th>
+                                <th className="px-5 py-3 text-right">
+                                    Odd Semester
+                                </th>
+                                <th className="px-5 py-3 text-right">
+                                    Even Semester
+                                </th>
+                                <th className="px-5 py-3 text-right">
+                                    Annual Total
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody className="divide-y divide-neutral-100">
+
+                            {loading ? (
+                                <tr>
+                                    <td
+                                        colSpan={6}
+                                        className="px-5 py-10 text-center text-neutral-500"
+                                    >
+                                        Loading fee structures...
+                                    </td>
+                                </tr>
+                            ) : records.length === 0 ? (
+                                <tr>
+                                    <td
+                                        colSpan={6}
+                                        className="px-5 py-10 text-center text-neutral-500"
+                                    >
+                                        No fee structures found.
+                                    </td>
+                                </tr>
+                            ) : (
+                                records.map(record => (
+                                    <tr
+                                        key={record.name}
+                                        className="hover:bg-neutral-50"
+                                    >
+                                        <td className="px-5 py-4 font-medium">
+                                            {record.branch}
+                                        </td>
+
+                                        <td className="px-5 py-4 text-neutral-600">
+                                            {record.academic_year}
+                                        </td>
+
+                                        <td className="px-5 py-4">
+                                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700">
+                                                Year {record.study_year}
+                                            </span>
+                                        </td>
+
+                                        <td className="px-5 py-4 text-right tabular-nums">
+                                            {currency(record.odd_semester_fee)}
+                                        </td>
+
+                                        <td className="px-5 py-4 text-right tabular-nums">
+                                            {currency(record.even_semester_fee)}
+                                        </td>
+
+                                        <td className="px-5 py-4 text-right font-semibold tabular-nums">
+                                            {currency(
+                                                Number(record.odd_semester_fee) +
+                                                Number(record.even_semester_fee)
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between border-t border-neutral-100 px-5 py-3">
+
+                    <span className="text-xs text-neutral-500">
+                        Showing {total ? page * PAGE_SIZE + 1 : 0}
+                        –
+                        {Math.min((page + 1) * PAGE_SIZE, total)}
+                        {" "}of {total}
+                    </span>
+
+                    <div className="flex gap-2">
+
+                        <button
+                            disabled={page === 0 || loading}
+                            onClick={() => setPage(p => p - 1)}
+                            className="rounded-lg border p-2 disabled:opacity-30"
+                        >
+                            <ChevronLeft size={16} />
+                        </button>
+
+                        <button
+                            disabled={
+                                (page + 1) * PAGE_SIZE >= total ||
+                                loading
+                            }
+                            onClick={() => setPage(p => p + 1)}
+                            className="rounded-lg border p-2 disabled:opacity-30"
+                        >
+                            <ChevronRight size={16} />
+                        </button>
+
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
